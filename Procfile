@@ -1,0 +1,1 @@
+web: gunicorn --pythonpath PbNotify_api PbNotify:app

@@ -7,7 +7,7 @@ from flask import Flask, Response, session, redirect, url_for, escape, request, 
 from functions import *
 
 app = Flask(__name__)
-app.secret_key = open('sk.txt',"r").read().strip()
+app.secret_key = os.environ['sk']
 
 	
 @app.route('/')

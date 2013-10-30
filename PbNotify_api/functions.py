@@ -3,13 +3,13 @@
 # Developed by Yasyf Mohamedali @ HackMIT 2013
 # https://github.com/yasyf/HackMIT
 
-import hashlib, datetime, json, calendar, collections
+import hashlib, datetime, json, calendar, collections, os
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson import json_util
 import twilio.twiml
 
-client = MongoClient(open('db.txt',"r").read().strip())
+client = MongoClient(os.environ['db'])
 db = client.hackmit
 users = db.users
 notifications = db.notifications

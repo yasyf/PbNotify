@@ -41,9 +41,10 @@ nosetests.xml
 Icon
 .dropbox
 
-#Mist
+#Misc
 db.txt
 sk.txt
+venv
 
 
 # Thumbnails
