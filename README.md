@@ -1,7 +1,9 @@
 PbNotify
 =======
 
-PbNotify is a Remote Pebble Notification API powered by Flask and MongoDB that can easily be set up to provide a public-facing bridge between the Internet at large and local notifications on your Pebble smartwatch. It is accompanied by a watchface on the Pebble that communicates with your smartphone via httpebble. This is ideal for many situations, as essentially any web app or server that could make a single API call can send notifications straight to your wrist. This was inspired by the need to be notified in a convenient manner when long-running commands on a remote server completed. Not only does PbNotify allow such notifications, but it also allows for a plethora of information to be sent along with the simple ping, such as the last command's exit status.
+PbNotify is a Remote Pebble Notification API powered by Flask and MongoDB that can easily be set up to provide a public-facing bridge between the Internet at large and local notifications on your Pebble smartwatch. It is accompanied by a watchface on the Pebble that communicates with your smartphone via [httpebble](https://github.com/Katharine/httpebble-watch). The [iOS](https://itunes.apple.com/us/app/httpebble/id650174711) or [Android](https://play.google.com/store/apps/details?id=com.lukekorth.httpebble&hl=en) httpebble app **must** be installed on your paired phone for PbNotify to work.
+
+This service is ideal for many situations, as essentially any web app or server that could make a single API call can send notifications straight to your wrist. This was inspired by the need to be notified in a convenient manner when long-running commands on a remote server completed. Not only does PbNotify allow such notifications, but it also allows for a plethora of information to be sent along with the simple ping, such as the last command's exit status.
 
 With the extra time I had after completing this hack, I implemented the Twilio SMS API, hooking it up to the PbNotify instance I have running on my demo site. As a result, you can directly text notifications to your watch! Simply send a text of the format `<userid>|<source>|<text>` to (617) 326-5364.
 
