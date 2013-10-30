@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Developed by Yasyf Mohamedali @ HackMIT 2013
-# https://github.com/yasyf/HackMIT
+# https://github.com/yasyf/PbNotify
 
 from flask import Flask, Response, session, redirect, url_for, escape, request, render_template
 from functions import *
@@ -15,7 +15,7 @@ def index():
 	if 'userid' in session:
 		return render_template('index.html', notifications=get_notifications(session["userid"]))
 	else:
-		return redirect(url_for('login', error="You must log in to do that."))
+		return redirect(url_for('login', error="Please login or register below."))
 
 @app.route('/sms')
 def sms_response():

@@ -1,13 +1,13 @@
-PbNotify + Extras From HackMIT 2013
+PbNotify
 =======
 
 PbNotify is a Remote Pebble Notification API powered by Flask and MongoDB that can easily be set up to provide a public-facing bridge between the Internet at large and local notifications on your Pebble smartwatch. It is accompanied by a watchface on the Pebble that communicates with your smartphone via httpebble. This is ideal for many situations, as essentially any web app or server that could make a single API call can send notifications straight to your wrist. This was inspired by the need to be notified in a convenient manner when long-running commands on a remote server completed. Not only does PbNotify allow such notifications, but it also allows for a plethora of information to be sent along with the simple ping, such as the last command's exit status.
 
-With the extra time I had after completing this hack, I implemented the Twilio SMS API, hooking it up to the PbNotify instance I have running on my demo site. As a result, you can directly text notifications to my watch! Simply send a text of the format `<userid>|<source>|<text>` to (617) 326-5364 (my userid is `5250a011dabae068d13ee5f4`).
+With the extra time I had after completing this hack, I implemented the Twilio SMS API, hooking it up to the PbNotify instance I have running on my demo site. As a result, you can directly text notifications to your watch! Simply send a text of the format `<userid>|<source>|<text>` to (617) 326-5364.
 
 Also found here is a quick API explorer that was hacked together for an entirely different project I had in mind.
 
-Simply start up the server, entering in your own secret key and database information, or try the demo at http://yasyf.scripts.mit.edu:8080/. After creating an account/logging in, you will be given a userid which can then be used with the following calls.
+Simply start up the server, entering in your own secret key and database information, or try the demo at http://pbnotify.herokuapp.com/. After creating an account/logging in, you will be given a userid which can then be used with the following calls.
 
 ###create new notification
 ####/notification/create/
@@ -18,7 +18,7 @@ Simply start up the server, entering in your own secret key and database informa
 	
 	returns: json-encoded notificationid
 	
-	$ curl "http://yasyf.scripts.mit.edu:8080/api/notification/create/5250a011dabae068d13ee5f4/Test/HelloWorld"
+	$ curl "http://pbnotify.herokuapp.com//api/notification/create/5250a011dabae068d13ee5f4/Test/HelloWorld"
 	{"notificationid": "525119b8796af044768ee0db"}
 	$ 
 
@@ -29,7 +29,7 @@ Simply start up the server, entering in your own secret key and database informa
 	
 	returns: httpebble-friendly json-encoded notification (source and text)
 	
-	$ curl "http://yasyf.scripts.mit.edu:8080/api/notification/get/5250a011dabae068d13ee5f4/525119b8796af044768ee0db"
+	$ curl "http://pbnotify.herokuapp.com//api/notification/get/5250a011dabae068d13ee5f4/525119b8796af044768ee0db"
 	{"1": "Test", "2": "HelloWorld"}
 	$ 
 
@@ -41,7 +41,7 @@ Simply start up the server, entering in your own secret key and database informa
 
 	returns: httpebble-friendly json-encoded notification (source and text)
 	
-	$ curl "http://yasyf.scripts.mit.edu:8080/api/notification/get/5250a011dabae068d13ee5f4"
+	$ curl "http://pbnotify.herokuapp.com//api/notification/get/5250a011dabae068d13ee5f4"
 	{"1": "Test", "2": "HelloWorld"}
 	$
 
@@ -53,7 +53,7 @@ Simply start up the server, entering in your own secret key and database informa
 
 	returns: json-encoded success or failure
 	
-	$ curl "http://yasyf.scripts.mit.edu:8080/api/notification/delivered/5250a011dabae068d13ee5f4"
+	$ curl "http://pbnotify.herokuapp.com//api/notification/delivered/5250a011dabae068d13ee5f4"
 	{"status": "success"}
 	$
 

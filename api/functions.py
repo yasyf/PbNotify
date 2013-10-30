@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 # Developed by Yasyf Mohamedali @ HackMIT 2013
-# https://github.com/yasyf/HackMIT
+# https://github.com/yasyf/PbNotify
 
 import hashlib, datetime, json, calendar, collections, os
 from pymongo import MongoClient
