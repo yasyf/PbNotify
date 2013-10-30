@@ -11,7 +11,7 @@
 #include "http.h"
 #include "main.h"
 
-#define USERID "5250a011dabae068d13ee5f4"
+#define USERID "YOUR_USERID_HERE" //from http://pbnotify.herokuapp.com
 #define GETURL "http://pbnotify.herokuapp.com/api/notification/get/"
 #define DELIVEREDURL "http://pbnotify.herokuapp.com/api/notification/delivered/"
   
