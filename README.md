@@ -67,4 +67,6 @@ API
 	{"status": "success"}
 	$
 
-
+Licence
+=======
+[This work is licensed under the MIT License.](http://yasyf.mit-license.org/)
