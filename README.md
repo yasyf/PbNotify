@@ -5,8 +5,6 @@ PbNotify is a Remote Pebble Notification API powered by Flask and MongoDB that c
 
 With the extra time I had after completing this hack, I implemented the Twilio SMS API, hooking it up to the PbNotify instance I have running on my demo site. As a result, you can directly text notifications to your watch! Simply send a text of the format `<userid>|<source>|<text>` to (617) 326-5364.
 
-Also found here is a quick API explorer that was hacked together for an entirely different project I had in mind.
-
 Simply start up the server, entering in your own secret key and database information, or try the demo at http://pbnotify.herokuapp.com/. After creating an account/logging in, you will be given a userid which can then be used with the following calls.
 
 ###create new notification

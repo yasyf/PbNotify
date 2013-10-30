@@ -1,1 +1,1 @@
-web: gunicorn --pythonpath PbNotify_api PbNotify:app
+web: gunicorn --pythonpath api PbNotify:app

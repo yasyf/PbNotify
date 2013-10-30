@@ -1,6 +1,6 @@
 /*
  * Developed by Yasyf Mohamedali @ HackMIT 2013
- * https://github.com/yasyf/HackMIT
+ * https://github.com/yasyf/PbNotify
  * 
  * Adapted from https://github.com/pebble/hackmit-2013/blob/ac954efc153646a093bc0cbe1a6864d90d86980d/isstracker-http/src/isstracker-http.c
  *
@@ -12,8 +12,8 @@
 #include "main.h"
 
 #define USERID "5250a011dabae068d13ee5f4"
-#define GETURL "http://yasyf.scripts.mit.edu:8080/api/notification/get/"
-#define DELIVEREDURL "http://yasyf.scripts.mit.edu:8080/api/notification/delivered/"
+#define GETURL "http://pbnotify.herokuapp.com/api/notification/get/"
+#define DELIVEREDURL "http://pbnotify.herokuapp.com/api/notification/delivered/"
   
 PBL_APP_INFO(HTTP_UUID,
       "PbNotify", "Yasyf Mohamedali",
