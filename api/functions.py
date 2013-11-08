@@ -118,7 +118,7 @@ def get_account_token(userid):
 
 def get_account_userid(token):
 	try:
-		userid = str(users.find({"token": token)[0]["_id"])
+		userid = str(users.find({"token": token})[0]["_id"])
 		return json.dumps({"1": "userid", "2": userid})
 	except KeyError:
 		return json.dumps({"1": "error", "2": "no userid found at this token"})
