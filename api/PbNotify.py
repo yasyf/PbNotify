@@ -18,6 +18,7 @@ def index():
 		return redirect(url_for('login', error="Please login or register below."))
 
 @app.route('/sms')
+@crossdomain(origin='*')
 def sms_response():
 	return twilio_sms_response(request.values.get('Body', ''))
 
@@ -46,6 +47,7 @@ def login():
 			return render_template('login.html',error=request.args.get('error', ''))
 
 @app.route('/api/notification/create/<userid>/<source>/<text>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
 def new_notification(userid, source, text):
 	if check_userid(userid):
 		if len(source) > 0 and len(text) > 0:
@@ -57,6 +59,7 @@ def new_notification(userid, source, text):
 	return Response(response=show_error(error), status=200, mimetype="application/json")
 
 @app.route('/api/notification/get/<userid>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
 def retreive_most_recent_notification(userid):
 	if check_userid(userid):
 		resp = get_most_recent_notification(userid)
@@ -65,6 +68,7 @@ def retreive_most_recent_notification(userid):
 		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
 
 @app.route('/api/notification/get/<userid>/<notificationid>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
 def retreive_notification(userid, notificationid):
 	if check_userid(userid) and check_notificationid(notificationid) and compare_ids(userid, notificationid):
 		return Response(response=get_notification(notificationid, userid), status=200, mimetype="application/json")
@@ -72,6 +76,7 @@ def retreive_notification(userid, notificationid):
 		return Response(response=show_error("invalid notificationid for this userid"), status=200, mimetype="application/json")
 
 @app.route('/api/notification/delivered/<userid>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
 def notification_delivered(userid):
 	if check_userid(userid):
 		return Response(response=mark_notification_delivered(userid, True), status=200, mimetype="application/json")
@@ -79,6 +84,7 @@ def notification_delivered(userid):
 		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
 
 @app.route('/api/account/token/<userid>/<token>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
 def set_account_token_call(userid, token):
 	if check_userid(userid):
 		return Response(response=set_account_token(userid, token), status=200, mimetype="application/json")
@@ -86,6 +92,7 @@ def set_account_token_call(userid, token):
 		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
 
 @app.route('/api/account/token/<userid>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
 def get_account_token_call(userid):
 	if check_userid(userid):
 		return Response(response=get_account_token(userid), status=200, mimetype="application/json")
@@ -93,6 +100,7 @@ def get_account_token_call(userid):
 		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
 
 @app.route('/api/account/userid/<token>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
 def get_account_userid_call(token):
 	return Response(response=get_account_userid(token), status=200, mimetype="application/json")
 
