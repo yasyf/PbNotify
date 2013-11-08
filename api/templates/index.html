@@ -3,6 +3,14 @@
 {% block content %}
   <h1>PbNotify: The Remote Pebble Notification API</h1>
   <p>your userid is <b>{{ session.userid }}</b></p>
+  <p>pebble account token
+  	<input type="text" id="accountToken" value="{{ token }}">
+  </p>	
+  <script type="text/javascript">
+  $("#accountToken").blur(function(){
+  	$.post("/api/account/token/{{ session.userid }}/" + $("#accountToken").val());
+  });
+  </script>	
 	<div>
 	 <ul>
 	  {% for notification in notifications %}

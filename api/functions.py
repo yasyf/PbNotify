@@ -97,3 +97,29 @@ def mark_notification_delivered(userid, delivered):
 	notificationid = str(notifications.find({"userid": userid, "delivered": "false"}).sort("time", -1)[0]["_id"])
 	notifications.update({"_id": ObjectId(notificationid)}, {"$set": {"delivered": status}})
 	return json.dumps({"1": "notificationid", "2": notificationid})
+
+def set_account_token(userid, token):
+	users.update({"_id": ObjectId(userid)}, {"$set": {"token": token}})
+	return json.dumps({"1": "token", "2": token})
+
+def get_account_token_raw(userid):
+	try:
+		token = users.find({"_id": ObjectId(userid)})[0]["token"]
+		return token
+	except KeyError:
+		return ""
+
+def get_account_token(userid):
+	try:
+		token = users.find({"_id": ObjectId(userid)})[0]["token"]
+		return json.dumps({"1": "token", "2": token})
+	except KeyError:
+		return json.dumps({"1": "error", "2": "no token set for this userid"})
+
+def get_account_userid(token):
+	try:
+		userid = str(users.find({"token": token)[0]["_id"])
+		return json.dumps({"1": "userid", "2": userid})
+	except KeyError:
+		return json.dumps({"1": "error", "2": "no userid found at this token"})
+
