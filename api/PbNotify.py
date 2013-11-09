@@ -61,7 +61,12 @@ def stripe_login():
 	if request.method == 'POST':
 		return stripe_post_login();
 	if request.method == 'GET':
-		return render_template('stripe_login.html',error='')
+		try:
+			username = session["username"]
+			password = session["password"]
+			return render_template('stripe_login.html',error='')
+		except Exception:
+			return redirect(url_for('login', error="Please login or register below."))
 
 @app.route('/login/stripe/promo/<promo>', methods=['POST','GET'])
 def promo_code(promo):
