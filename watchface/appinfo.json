@@ -7,7 +7,7 @@
   "versionLabel": "1.0.0",
   "capabilities": [ "configurable" ],
   "watchapp": {
-    "watchface": false
+    "watchface": true
   },
   "appKeys": {
     "source": 0,

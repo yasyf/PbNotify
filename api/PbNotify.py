@@ -77,7 +77,10 @@ def login():
 def new_notification(userid, source, text):
 	if check_userid(userid):
 		if len(source) > 0 and len(text) > 0:
-			return Response(response=create_notification(userid, source, text), status=200, mimetype="application/json")
+			if len(source) > 10 or len(text) > 50:
+				error = "invalid length"
+			else:
+				return Response(response=create_notification(userid, source, text), status=200, mimetype="application/json")
 		else:
 			error = "missing required parameter"
 	else:
@@ -108,6 +111,15 @@ def notification_delivered(userid):
 		return Response(response=mark_notification_delivered(userid, True), status=200, mimetype="application/json")
 	else:
 		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
+
+@app.route('/api/account/history/clear/<userid>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
+def clear_account_history(userid):
+	if check_userid(userid):
+		return Response(response=clear_history(userid), status=200, mimetype="application/json")
+	else:
+		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
+
 
 @app.route('/api/account/token/<userid>/<token>', methods=['POST', 'GET'])
 @crossdomain(origin='*')

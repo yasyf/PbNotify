@@ -4,6 +4,7 @@ var needToSend = false;
 var getting = false;
 var source, message;
 var requested = false;
+var init = false;
 
 function dump(arr,level) {
 	var dumped_text = "";
@@ -99,7 +100,7 @@ function getNotification() {
         console.log(req.responseText);
         response = JSON.parse(req.responseText);
         if (response) {
-          if(response[1] != "error" && (source != response[2] && message != response[4])){
+          if(response[1] != "error" && (source != response[2] || message != response[4])){
 	          source = response[2];
 	          message = response[4];
 	          console.log("Source: "+ source);
@@ -120,20 +121,26 @@ function getNotification() {
 }
 
 function sendNotification(){
+  if(needToSend == false){
+    return
+  }
+  else{
+    needToSend = false;
+  }
   Pebble.sendAppMessage({
     "source":source,
     "message":message},
     function(e) {
 	    console.log("Successfully delivered message with transactionId="
 	      + e.data.transactionId);
-	    needToSend = false;
 	    markNotificationRead();
 	    Pebble.showSimpleNotificationOnPebble(source, message);
 	},
   	function(e) {
+      needToSend = true;
 	    console.log("Unable to deliver message with transactionId="
 	      + e.data.transactionId
-	      + " Error is: " + e.error.message);
+	      + dump(e));
   	});
 }
 
@@ -145,35 +152,40 @@ function processNotification(){
 
 function config(){
 	if(id != ""){
+    console.log("Set Identifier: " + id);
 		return;
 	}
 	if(Pebble.getAccountToken() != ""){
 		console.log("Getting Identifier From Pebble Token");
 		getIDFromPebble(); 
 	}else{
+    console.log("Requesting Config");
 		requestConfig();
 	}
 }
 
 function requestConfig(){
-  if(requested == true){
+  if(requested == true || init == false){
     return;
   }
   else{
     requested = true;
   }
   source = "PbNotify";
-  message = "Please Configure PbNotify On Your Mobile Devicex";
+  message = "Please Configure PbNotify On Your Mobile Device";
   needToSend = true;
 }
+
 
 Pebble.addEventListener("ready",
   function(e) {
 	  if(e.ready){
+      init = true;
 	  	console.log("JavaScript app ready and running!");
-		console.log("Pebble Account Token: " + Pebble.getAccountToken());
-    requestConfig();
-		config();
+		  console.log("Pebble Account Token: " + Pebble.getAccountToken());
+      setTimeout(config,1000);
+      setInterval(processNotification,1000);
+      setInterval(getNotification,10000); 
 	  }
 	  else{
 		  console.log("Ready Listener: "+ e.type);
@@ -184,7 +196,7 @@ Pebble.addEventListener("appmessage",
   function(e) {
     console.log("Received message: " + dump(e.payload));
     if(e.payload.command == "1"){
-    	getNotification();
+      getNotification();
     }
   }
 );
@@ -199,7 +211,8 @@ Pebble.addEventListener("webviewclosed",
     id = e.response;
     console.log("Set Identifier: " + id);
     savePebbleID();
+    source = "PbNotify";
+    message = "No Messages";
+    needToSend = true;
   }
 );
-setInterval(processNotification,1000);
-setInterval(getNotification,10000);

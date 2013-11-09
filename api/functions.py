@@ -142,6 +142,11 @@ def mark_notification_delivered(userid, delivered):
 	notifications.update({"_id": ObjectId(notificationid)}, {"$set": {"delivered": status}})
 	return json.dumps({"1": "notificationid", "2": notificationid})
 
+def clear_history(userid):
+	count = notifications.find({"userid": userid, "delivered": "true"}).count()
+	notifications.remove({"userid": userid, "delivered": "true"})
+	return json.dumps({"1": "notifications", "2": count})
+
 def set_account_token(userid, token):
 	users.update({"_id": ObjectId(userid)}, {"$set": {"token": token}})
 	return json.dumps({"1": "token", "2": token})

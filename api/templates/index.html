@@ -2,17 +2,22 @@
 {% block title %}Welcome{% endblock %}
 {% block content %}
   <h1>PbNotify: The Remote Pebble Notification API</h1>
-  <p>your userid is <b>{{ session.userid }}</b></p>
+  <p>notification userid <b>{{ session.userid }}</b></p>
   <p>pebble account token
   	<input type="text" class="lineput" id="accountToken" value="{{ token }}">
-  </p>	
+  </p>
+  <p><a id="clear">clear history</a></b></p>	
   <script type="text/javascript">
   $("#accountToken").blur(function(){
   	$.post("/api/account/token/{{ session.userid }}/" + $("#accountToken").val());
   });
+  $("#clear").click(function(){
+    $.post("/api/account/history/clear/{{ session.userid }}");
+    $("notifications").html("");
+  });
   </script>	
 	<div>
-	 <ul>
+	 <ul id="notifications">
 	  {% for notification in notifications %}
 	  	{% if notification.delivered == "true" %} <del> {% endif %}
 		<li>(<i>{{ notification.time }}</i>) <b>{{ notification.source }}</b>: {{ notification.text }}</li>

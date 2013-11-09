@@ -1,12 +1,13 @@
 #include <pebble.h>
 
 static Window *window;
+static TextLayer *time_layer;
 static TextLayer *source_layer;
 static TextLayer *message_layer;
 static AppSync sync;
-static uint8_t sync_buffer[64];
-const int inbound_size = 64;
-const int outbound_size = 64;
+static uint8_t sync_buffer[124];
+const int inbound_size = 124;
+const int outbound_size = 124;
 
 enum NotifyKey {
   SOURCE_KEY = 0x0,  // TUPLE_CSTRING
@@ -67,25 +68,31 @@ static void click_config_provider(void *context) {
 
 static void window_load(Window *window) {
   Layer *window_layer = window_get_root_layer(window);
-  GRect bounds = layer_get_bounds(window_layer);
 
-  source_layer = text_layer_create(GRect(0, 10, 144, 68));
+  time_layer = text_layer_create(GRect(0, 5, 144, 68));
+  text_layer_set_text_color(time_layer, GColorWhite);
+  text_layer_set_background_color(time_layer, GColorClear);
+  text_layer_set_font(time_layer, fonts_get_system_font(FONT_KEY_BITHAM_42_MEDIUM_NUMBERS));
+  text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
+  layer_add_child(window_layer, text_layer_get_layer(time_layer));
+
+  source_layer = text_layer_create(GRect(0, 125, 144, 68));
   text_layer_set_text_color(source_layer, GColorWhite);
   text_layer_set_background_color(source_layer, GColorClear);
   text_layer_set_font(source_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   text_layer_set_text_alignment(source_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(source_layer));
 
-  message_layer = text_layer_create(GRect(0, 30, 144, 68));
+  message_layer = text_layer_create(GRect(0, 60, 144, 68));
   text_layer_set_text_color(message_layer, GColorWhite);
   text_layer_set_background_color(message_layer, GColorClear);
-  text_layer_set_font(message_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
+  text_layer_set_font(message_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   text_layer_set_text_alignment(message_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(message_layer));
 
   Tuplet initial_values[] = {
     TupletCString(SOURCE_KEY, "PbNotify"),
-    TupletCString(MESSAGE_KEY, "No Message"),
+    TupletCString(MESSAGE_KEY, "No Messages"),
   };
 
   app_sync_init(&sync, sync_buffer, sizeof(sync_buffer),
@@ -94,6 +101,13 @@ static void window_load(Window *window) {
 
   send_cmd();
 }
+
+ static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
+      static char time_text[] = "00:00"; // Needs to be static because it's used by the system later.
+      strftime(time_text, sizeof(time_text), "%l:%M", tick_time);
+      text_layer_set_text(time_layer, time_text);
+
+  }
 
 static void window_unload(Window *window) {
   app_sync_deinit(&sync);
@@ -113,6 +127,8 @@ static void init(void) {
 
   
   app_message_open(inbound_size, outbound_size);
+
+  tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
   
   const bool animated = true;
   window_stack_push(window, animated);
