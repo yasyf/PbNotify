@@ -19,15 +19,15 @@ static void sync_error_callback(DictionaryResult dict_error, AppMessageResult ap
 }
 
 static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tuple, const Tuple* old_tuple, void* context) {
-      APP_LOG(APP_LOG_LEVEL_DEBUG, "Key: %lu", key);
+      //APP_LOG(APP_LOG_LEVEL_DEBUG, "Key: %lu", key);
       switch (key) {
         case SOURCE_KEY:
-          APP_LOG(APP_LOG_LEVEL_DEBUG, "Source: %s", new_tuple->value->cstring);
+          //APP_LOG(APP_LOG_LEVEL_DEBUG, "Source: %s", new_tuple->value->cstring);
           text_layer_set_text(source_layer, new_tuple->value->cstring);
           layer_mark_dirty(text_layer_get_layer(source_layer));
           break;
         case MESSAGE_KEY:
-          APP_LOG(APP_LOG_LEVEL_DEBUG, "Message: %s", new_tuple->value->cstring);
+          //APP_LOG(APP_LOG_LEVEL_DEBUG, "Message: %s", new_tuple->value->cstring);
           text_layer_set_text(message_layer, new_tuple->value->cstring);
           layer_mark_dirty(text_layer_get_layer(message_layer));
           break;
@@ -110,23 +110,52 @@ static void window_load(Window *window) {
   text_layer_set_overflow_mode(message_layer, GTextOverflowModeWordWrap);
   layer_add_child(window_layer, text_layer_get_layer(message_layer));
 
-  Tuplet initial_values[] = {
-    TupletCString(SOURCE_KEY, "PbNotify"),
-    TupletCString(MESSAGE_KEY, "No Messages"),
-  };
+  if(bluetooth_connection_service_peek() == true){
+      Tuplet initial_values[] = {
+        TupletCString(SOURCE_KEY, "PbNotify"),
+        TupletCString(MESSAGE_KEY, "No Messages"),
+      };
 
-  app_sync_init(&sync, sync_buffer, sizeof(sync_buffer),
-               initial_values, ARRAY_LENGTH(initial_values),
-               sync_tuple_changed_callback, sync_error_callback, NULL);
+      app_sync_init(&sync, sync_buffer, sizeof(sync_buffer),
+                   initial_values, ARRAY_LENGTH(initial_values),
+                   sync_tuple_changed_callback, sync_error_callback, NULL);
 
-  start_js();
+      start_js();
+  }
+  else {
+    Tuplet initial_values[] = {
+        TupletCString(SOURCE_KEY, "PbNotify"),
+        TupletCString(MESSAGE_KEY, "Disconnected"),
+      };
+
+      app_sync_init(&sync, sync_buffer, sizeof(sync_buffer),
+                   initial_values, ARRAY_LENGTH(initial_values),
+                   sync_tuple_changed_callback, sync_error_callback, NULL);
+  }
+
 }
 
  static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
       static char time_text[] = "00:00"; // Needs to be static because it's used by the system later.
       strftime(time_text, sizeof(time_text), "%I:%M", tick_time);
       text_layer_set_text(time_layer, time_text);
+  }
 
+ static void handle_bluetooth_toggle(bool connected) {
+    //APP_LOG(APP_LOG_LEVEL_DEBUG, "Connected: %d", connected);
+    if (connected == false){
+      text_layer_set_text(message_layer, "Disconnected");
+      layer_mark_dirty(text_layer_get_layer(message_layer));
+      light_enable_interaction();
+      vibes_short_pulse();
+    }
+    else {
+      text_layer_set_text(message_layer, "Connection Restored");
+      layer_mark_dirty(text_layer_get_layer(message_layer));
+      light_enable_interaction();
+      vibes_short_pulse();
+      start_js();
+    } 
   }
 
 static void window_unload(Window *window) {
@@ -145,11 +174,13 @@ static void init(void) {
     .unload = window_unload,
   });
 
-   app_message_register_inbox_received(in_received_handler);
-   app_message_register_inbox_dropped(in_dropped_handler);
-   app_message_register_outbox_sent(out_sent_handler);
-   app_message_register_outbox_failed(out_failed_handler);
-   app_message_open(inbound_size, outbound_size);
+  bluetooth_connection_service_subscribe(handle_bluetooth_toggle);
+
+  app_message_register_inbox_received(in_received_handler);
+  app_message_register_inbox_dropped(in_dropped_handler);
+  app_message_register_outbox_sent(out_sent_handler);
+  app_message_register_outbox_failed(out_failed_handler);
+  app_message_open(inbound_size, outbound_size);
 
   tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
   
