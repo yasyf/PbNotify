@@ -3,12 +3,11 @@
 {% block content %}
   <h1>PbNotify: The Remote Pebble Notification API</h1>
   <p>your userid is <b>{{ session.userid }}</b></p>
-  <p>pebble account token is <b>{{ token }}</b></p>
   <br />
-  <p><a href="pebblejs://close#{{ token }}">Click To Complete</a></p>
+  <p><a href="pebblejs://close#{{ session.userid }}"><b>Click To Complete</b></a></p>
   <script type="text/javascript">
 $(document).ready(function() {
-  	document.location = "pebblejs://close#{{ token }}";
+  	document.location = "pebblejs://close#{{ session.userid }}";
 });
   </script>	
 {% endblock %}

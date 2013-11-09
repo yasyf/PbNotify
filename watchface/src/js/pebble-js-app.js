@@ -3,6 +3,7 @@ var endpoint = "https://pbnotify.herokuapp.com/api/"
 var needToSend = false;
 var getting = false;
 var source, message;
+var requested = false;
 
 function dump(arr,level) {
 	var dumped_text = "";
@@ -73,7 +74,7 @@ function getIDFromPebble() {
           }
           else{
           	console.log(dump(response));
-          	Pebble.openURL("https://pbnotify.herokuapp.com/config/pebble");
+          	requestConfig();
           }
        	}
       } 
@@ -150,8 +151,20 @@ function config(){
 		console.log("Getting Identifier From Pebble Token");
 		getIDFromPebble(); 
 	}else{
-		Pebble.openURL("https://pbnotify.herokuapp.com/config/pebble");
+		requestConfig();
 	}
+}
+
+function requestConfig(){
+  if(requested == true){
+    return;
+  }
+  else{
+    requested = true;
+  }
+  source = "PbNotify";
+  message = "Please Configure PbNotify On Your Mobile Devicex";
+  needToSend = true;
 }
 
 Pebble.addEventListener("ready",
@@ -159,6 +172,7 @@ Pebble.addEventListener("ready",
 	  if(e.ready){
 	  	console.log("JavaScript app ready and running!");
 		console.log("Pebble Account Token: " + Pebble.getAccountToken());
+    requestConfig();
 		config();
 	  }
 	  else{
@@ -182,7 +196,8 @@ Pebble.addEventListener("showConfiguration",
 
 Pebble.addEventListener("webviewclosed",
   function(e) {
-    id = e.configurationData;
+    id = e.response;
+    console.log("Set Identifier: " + id);
     savePebbleID();
   }
 );
