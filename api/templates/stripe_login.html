@@ -2,9 +2,12 @@
 {% block title %}Welcome{% endblock %}
 {% block content %}
   <h1>PbNotify: The Pebble Notification API</h1>
+  <p>PbNotify is a Remote Pebble Notification API that provides a public-facing bridge between the Internet at large and local notifications on your Pebble.It is accompanied by a free watchface on the Pebble. This service allows any web app or server that can make a single API call to send notifications straight to your wrist. It was created to be notified when long-running commands on a remote server completed, with metadata like exit status easily being displayed on your watch, but this is only one example of the many uses for PbNotify.</p>
+  <br />
   <p style="color:red;">{{ error }}</p>
   <br />
   <p>PbNotify is a subscrption service. The fee is a flat rate of $5 a month for unlimited use.</p>
+  <br />
 	<div>
 		<form action="{{ url_for('stripe_login') }}" method="POST">
 		  <script
@@ -15,5 +18,23 @@
 		    data-description="Monthly Subscription Fee">
 		  </script>
 		</form>
+		 <br /><input type="text" class="lineput params" id="promo">
+		   <script type="text/javascript">
+			  $("#promo").blur(function(){
+			  	if($("#promo").val() == ""){
+			  		$("#promo").css("background","none");
+			  		return;
+			  	}
+			  	$.post("/login/stripe/promo/" + $("#promo").val(), function(data) {
+				  if(JSON.parse(data).valid == "true"){
+				  	$("#promo").css("background-color","#3ceb6f");
+				  	document.location = "/login/stripe/promo/" + $("#promo").val();
+				  }
+				  else{
+				  	$("#promo").css("background-color","#eb593c");
+				  }
+				});
+			  });
+		  </script>	
 	</div>
 {% endblock %}

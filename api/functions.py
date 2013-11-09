@@ -3,7 +3,7 @@
 # Developed by Yasyf Mohamedali @ HackMIT 2013
 # https://github.com/yasyf/PbNotify
 
-import hashlib, datetime, json, calendar, collections, os
+import hashlib, datetime, json, calendar, collections, os, time
 from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson import json_util
@@ -166,6 +166,19 @@ def get_account_token(userid):
 	except Exception:
 		return json.dumps({"1": "error", "2": "no token set for this userid"})
 
+def validate_promo(promo):
+	if validate_promo_raw(promo) == True:
+		return json.dumps({"valid": "true"})
+	else:
+		return json.dumps({"valid": "false"})
+
+def validate_promo_raw(promo):
+	#PbNotifyPromo-sha1({DD}{MM}{YYYY})
+	if promo == "PbNotifyPromo-"+sha1(time.strftime("%d%m%Y")):
+		return True
+	else:
+		return False
+
 def get_account_userid(token):
 	try:
 		userid = str(users.find({"token": token})[0]["_id"])
@@ -184,6 +197,8 @@ def stripe_post_login():
 		session.pop('password')
 		return redirect(url_for('index'))
 	except stripe.CardError, e:
-	  # The card has been declined
-	  return render_template('stripe_login.html',error=e)
+		# The card has been declined
+		return render_template('stripe_login.html',error=e)
+	except Exception:
+		return redirect(url_for('index'))
 

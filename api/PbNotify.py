@@ -63,6 +63,21 @@ def stripe_login():
 	if request.method == 'GET':
 		return render_template('stripe_login.html',error='')
 
+@app.route('/login/stripe/promo/<promo>', methods=['POST','GET'])
+def promo_code(promo):
+	if request.method == "POST":
+		return validate_promo(promo);
+	elif request.method == "GET":
+		if validate_promo_raw(promo) == True:
+			try:
+				session["userid"] = create_user(session["username"], session["password"], None)
+				session.pop('username')
+				session.pop('password')
+				return redirect(url_for('index'))
+			except Exception:
+				return redirect(url_for('index'))
+		else:
+			return redirect(url_for('stripe_login'))
 	
 @app.route('/login', methods=['POST', 'GET'])
 def login():
@@ -154,10 +169,10 @@ def get_account_token_call(userid):
 def get_account_userid_call(token):
 	return Response(response=get_account_userid(token), status=200, mimetype="application/json")
 
-@app.route('/api', methods=['POST', 'GET'])
+@app.route('/api', methods=['GET'])
 @crossdomain(origin='*')
 def api_help():
 	return render_template('api_help.html')
 	
 if __name__ == '__main__':
-    app.run(host='0.0.0.0',port=8080,debug=True)
+    app.run(host='0.0.0.0',port=8080,debug=False)

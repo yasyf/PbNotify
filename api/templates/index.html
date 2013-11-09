@@ -2,7 +2,7 @@
 {% block title %}Welcome{% endblock %}
 {% block content %}
   <h1>PbNotify: The Remote Pebble Notification API</h1>
-  <p>To begin, <a href="{{ url_for('static', filename='watchface.pbw') }}">download</a> the PbNotify watchface, and connect it with your PbNotify account. Then refer to the API documentation <a href="{{ url_for('api_help') }}">here</a> to begin sending notifications.</p>
+  <p>To begin, <a href="{{ url_for('static', filename='watchface.pbw') }}">download</a> the PbNotify watchface, install it by opening it in the Pebble app on your smartphone, and follow the set-up process to connect it with your PbNotify account. Then refer to the API documentation <a href="{{ url_for('api_help') }}">here</a> to begin sending notifications.</p>
   <br />
   <p>notification userid <span class="params">{{ session.userid }}</span></p>
   <p>pebble account token
