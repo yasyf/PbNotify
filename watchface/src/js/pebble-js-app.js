@@ -43,6 +43,21 @@ function markNotificationRead() {
   req.send(null);
 }
 
+
+function savePebbleID() {
+  var response;
+  var req = new XMLHttpRequest();
+  req.open('GET', endpoint + "account/token/" + id + "/" + Pebble.getAccountToken(), true);
+  req.onload = function(e) {
+    if (req.readyState == 4) {
+      if(req.status == 200) {
+        console.log(req.responseText);
+      } 
+    }
+  }
+  req.send(null);
+}
+
 function getIDFromPebble() {
   var response;
   var req = new XMLHttpRequest();
@@ -58,6 +73,7 @@ function getIDFromPebble() {
           }
           else{
           	console.log(dump(response));
+          	Pebble.openURL("https://pbnotify.herokuapp.com/config/pebble");
           }
        	}
       } 
@@ -131,7 +147,7 @@ function config(){
 		return;
 	}
 	if(Pebble.getAccountToken() != ""){
-		console.log("Getting Identifier From Pebble");
+		console.log("Getting Identifier From Pebble Token");
 		getIDFromPebble(); 
 	}else{
 		Pebble.openURL("https://pbnotify.herokuapp.com/config/pebble");
@@ -159,13 +175,15 @@ Pebble.addEventListener("appmessage",
   }
 );
 Pebble.addEventListener("showConfiguration",
-  function(e) {
+  function() {
     Pebble.openURL("https://pbnotify.herokuapp.com/config/pebble");
   }
 );
+
 Pebble.addEventListener("webviewclosed",
   function(e) {
     id = e.configurationData;
+    savePebbleID();
   }
 );
 setInterval(processNotification,1000);

@@ -1,14 +1,14 @@
 {
   "uuid": "6ae491d1-4652-4964-937f-c23b6d5ada42",
-  "shortName": "PbNotify",
+  "shortName": "PbNotify 2",
   "longName": "PbNotify",
   "companyName": "Yasyf Mohamedali",
   "versionCode": 1,
   "versionLabel": "1.0.0",
+  "capabilities": [ "configurable" ],
   "watchapp": {
     "watchface": false
   },
-  "capabilities": [ "configurable" ],
   "appKeys": {
     "source": 0,
     "message": 1,
