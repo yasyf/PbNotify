@@ -53,6 +53,14 @@ def pebble_login():
 		else:
 			return render_template('pebble_login.html',error=request.args.get('error', ''))
 
+@app.route('/login/stripe', methods=['POST','GET'])
+def stripe_login():
+	if request.method == 'POST':
+		return stripe_post_login();
+	if request.method == 'GET':
+		return render_template('stripe_login.html',error='')
+
+	
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	if request.method == 'POST':
@@ -62,8 +70,9 @@ def login():
 			session["userid"] = get_userid(username)
 			return redirect(url_for('index'))
 		elif validate_credentials(username,password):
-			session["userid"] = create_user(username,password)
-			return redirect(url_for('index'))
+			session["username"] = username
+			session["password"] = sha1(password)
+			return redirect(url_for('stripe_login'))
 		else:
 			return render_template('login.html',error="Your credentials were invalid.")
 	else:

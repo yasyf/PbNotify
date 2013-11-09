@@ -8,9 +8,10 @@ from pymongo import MongoClient
 from bson.objectid import ObjectId
 from bson import json_util
 from datetime import timedelta
-from flask import make_response, request, current_app
+from flask import make_response, request, current_app, render_template, redirect, url_for, session
 from functools import update_wrapper
 import twilio.twiml
+import stripe
 
 client = MongoClient(os.environ['db'])
 db = client.hackmit
@@ -104,8 +105,8 @@ def sha1(text):
 	m.update(text)
 	return m.hexdigest()
 	
-def create_user(username, password):
-	return str(users.insert({"username": username, "password": sha1(password)}))
+def create_user(username, password, stripe_cust):
+	return str(users.insert({"username": username, "password": password, "stripe_cust": stripe_cust}))
 	
 def create_notification(userid, source, text):
 	return json.dumps({"1": "notificationid", "2": str(notifications.insert({"userid": userid, "time": datetime.datetime.utcnow(), "source": source, "text": text, "delivered": "false"}))})
@@ -171,4 +172,18 @@ def get_account_userid(token):
 		return json.dumps({"1": "userid", "2": userid})
 	except IndexError:
 		return json.dumps({"1": "error", "2": "no userid found at this token"})
+
+def stripe_post_login():
+	stripe.api_key = os.environ['stripe_sk']
+	token = request.form.get['stripeToken']
+	try:
+		stripe_cust = stripe.Customer.create(card=token, plan="PBNOTIFY", description="PbNotify: " + username)
+		session["userid"] = create_user(session["username"], session["password"], stripe_cust)
+		session.pop('username')
+		session.pop('password')
+		stripe_cust.description = "PbNotify: %s (%s)" % (session["userid"], username)
+		return redirect(url_for('index'))
+	except stripe.CardError, e:
+	  # The card has been declined
+	  return render_template('stripe_login.html',error=e)
 

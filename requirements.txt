@@ -8,7 +8,9 @@ httplib2==0.8
 itsdangerous==0.23
 pymongo==2.6.3
 pytz==2013.7
+requests==0.13.2
 six==1.4.1
+stripe==1.9.8
 twilio==3.6.3
 unittest2==0.5.1
 wsgiref==0.1.2
