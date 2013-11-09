@@ -1,1 +1,0 @@
-void select_single_click_handler(ClickRecognizerRef recognizer, Window *window);
