@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+  <h1>PbNotify: The Pebble Notification API</h1>
+  <p style="color:red;">{{ error }}</p>
+	<div>
+		<form action="{{ url_for('stripe_login') }}" method="POST">
+		  <script
+		    src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+		    data-key="pk_test_bRZoGvGajV5TeFq28CmFyxYa"
+		    data-amount="500"
+		    data-name="PbNotify"
+		    data-description="Monthly Subscription Fee">
+		  </script>
+		</form>
+	</div>
+{% endblock %}
