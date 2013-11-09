@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+  <h1>PbNotify: The Pebble Notification API</h1>
+  <p style="color:red;">{{ error }}</p>
+	<div>
+		<form action="{{ url_for('pebble_login') }}" method="POST">
+			Username: <input type="text" name="username"><br /><br />
+			Password: <input type="password" name="password"><br /><br />
+			<input type="submit" />
+		</form>	
+	</div>
+{% endblock %}

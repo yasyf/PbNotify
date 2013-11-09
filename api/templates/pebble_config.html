@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+  <h1>PbNotify: The Remote Pebble Notification API</h1>
+  <p>your userid is <b>{{ session.userid }}</b></p>
+  <p>pebble account token is <b>{{ token }}</b></p>
+  <script type="text/javascript">
+$(document).ready(function() {
+	document.href = "pebblejs:///close#{{ token }}";
+});
+  </script>	
+{% endblock %}

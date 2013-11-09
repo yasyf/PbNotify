@@ -27,6 +27,32 @@ def logout():
 	session.pop('userid')
 	return redirect(url_for('index'))
 
+@app.route('/config/pebble')
+def pebble_config():
+	if 'userid' in session:
+		return render_template('pebble_config.html', token=get_account_token_raw(session["userid"]))
+	else:
+		return redirect(url_for('pebble_login', error="Please login or register below."))
+
+@app.route('/login/pebble', methods=['POST', 'GET'])
+def pebble_login():
+	if request.method == 'POST':
+		username = request.form.get('username','')
+		password = request.form.get('password','')
+		if check_credentials(username,password):
+			session["userid"] = get_userid(username)
+			return redirect(url_for('pebble_config'))
+		elif validate_credentials(username,password):
+			session["userid"] = create_user(username,password)
+			return redirect(url_for('pebble_config'))
+		else:
+			return render_template('pebble_login.html',error="Your credentials were invalid.")
+	else:
+		if 'userid' in session:
+			return redirect(url_for('pebble_config'))
+		else:
+			return render_template('pebble_login.html',error=request.args.get('error', ''))
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
 	if request.method == 'POST':

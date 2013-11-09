@@ -8,6 +8,7 @@
   "watchapp": {
     "watchface": false
   },
+  "capabilities": [ "configurable" ],
   "appKeys": {
     "source": 0,
     "message": 1,

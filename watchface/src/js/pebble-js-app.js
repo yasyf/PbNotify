@@ -82,7 +82,7 @@ function getNotification() {
         console.log(req.responseText);
         response = JSON.parse(req.responseText);
         if (response) {
-          if(response[1] != "error"){
+          if(response[1] != "error" && (source != response[2] && message != response[4])){
 	          source = response[2];
 	          message = response[4];
 	          console.log("Source: "+ source);
@@ -127,11 +127,14 @@ function processNotification(){
 }
 
 function config(){
+	if(id != ""){
+		return;
+	}
 	if(Pebble.getAccountToken() != ""){
 		console.log("Getting Identifier From Pebble");
 		getIDFromPebble(); 
 	}else{
-		console.log("No Identifier Set");
+		Pebble.openURL("https://pbnotify.herokuapp.com/config/pebble");
 	}
 }
 
@@ -153,6 +156,16 @@ Pebble.addEventListener("appmessage",
     if(e.payload.command == "1"){
     	getNotification();
     }
+  }
+);
+Pebble.addEventListener("showConfiguration",
+  function(e) {
+    Pebble.openURL("https://pbnotify.herokuapp.com/config/pebble");
+  }
+);
+Pebble.addEventListener("webviewclosed",
+  function(e) {
+    id = e.configurationData;
   }
 );
 setInterval(processNotification,1000);
