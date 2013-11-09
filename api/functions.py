@@ -156,32 +156,32 @@ def get_account_token_raw(userid):
 	try:
 		token = users.find({"_id": ObjectId(userid)})[0]["token"]
 		return token
-	except IndexError:
-		return ""
+	except Exception:
+		return "none"
 
 def get_account_token(userid):
 	try:
 		token = users.find({"_id": ObjectId(userid)})[0]["token"]
 		return json.dumps({"1": "token", "2": token})
-	except IndexError:
+	except Exception:
 		return json.dumps({"1": "error", "2": "no token set for this userid"})
 
 def get_account_userid(token):
 	try:
 		userid = str(users.find({"token": token})[0]["_id"])
 		return json.dumps({"1": "userid", "2": userid})
-	except IndexError:
+	except Exception:
 		return json.dumps({"1": "error", "2": "no userid found at this token"})
 
 def stripe_post_login():
 	stripe.api_key = os.environ['stripe_sk']
-	token = request.form.get['stripeToken']
+	token = request.form.get('stripeToken','')
 	try:
-		stripe_cust = stripe.Customer.create(card=token, plan="PBNOTIFY", description="PbNotify: " + username)
-		session["userid"] = create_user(session["username"], session["password"], stripe_cust)
+		stripe_cust = stripe.Customer.create(card=token, plan="PBNOTIFY", description="PbNotify: " + session["username"])
+		session["userid"] = create_user(session["username"], session["password"], stripe_cust.id)
+		stripe_cust.description = "PbNotify: %s (%s)" % (session["userid"], session["username"])
 		session.pop('username')
 		session.pop('password')
-		stripe_cust.description = "PbNotify: %s (%s)" % (session["userid"], username)
 		return redirect(url_for('index'))
 	except stripe.CardError, e:
 	  # The card has been declined

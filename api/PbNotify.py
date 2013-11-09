@@ -24,7 +24,10 @@ def sms_response():
 
 @app.route('/logout')
 def logout():
-	session.pop('userid')
+	try:
+		session.pop('userid')
+	except KeyError:
+		pass
 	return redirect(url_for('index'))
 
 @app.route('/config/pebble')
