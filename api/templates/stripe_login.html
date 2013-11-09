@@ -3,6 +3,7 @@
 {% block content %}
   <h1>PbNotify: The Pebble Notification API</h1>
   <p style="color:red;">{{ error }}</p>
+  <br />
   <p>PbNotify is a subscrption service. The fee is a flat rate of $5 a month for unlimited use.</p>
 	<div>
 		<form action="{{ url_for('stripe_login') }}" method="POST">

@@ -154,6 +154,10 @@ def get_account_token_call(userid):
 def get_account_userid_call(token):
 	return Response(response=get_account_userid(token), status=200, mimetype="application/json")
 
+@app.route('/api', methods=['POST', 'GET'])
+@crossdomain(origin='*')
+def api_help():
+	return render_template('api_help.html')
 	
 if __name__ == '__main__':
     app.run(host='0.0.0.0',port=8080,debug=True)

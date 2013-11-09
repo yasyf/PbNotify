@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+  <h1>PbNotify: The Pebble Notification API</h1>
+  <br />
+<h3 id="createnewnotification">create new notification</h3>
+
+<h4 id="notificationcreate">/notification/create/</h4>
+
+<h5 id="httpspbnotifyherokuappcomapinotificationcreateltuseridgtltsourcegtlttextgt">https://pbnotify.herokuapp.com/api/notification/create/&lt;userid&gt;/&lt;source&gt;/&lt;text&gt;</h5>
+
+<pre><code>userid: your generated userid
+source: the originating entity of your notification
+text: the text of your notification
+
+returns: json-encoded notificationid
+
+$ curl "http://pbnotify.herokuapp.com/api/notification/create/2150a001dab1d068d13ee5f5/Test/HelloWorld"
+{"1": "notificationid", "2": "527ded52049fed00073e9c0f"}
+</code></pre>
+
+<h3 id="retrievemostrecentnotification">retrieve most recent notification</h3>
+
+<h4 id="notificationget">/notification/get/</h4>
+
+<h5 id="httpspbnotifyherokuappcomapinotificationgetltuseridgt">https://pbnotify.herokuapp.com/api/notification/get/&lt;userid&gt;</h5>
+
+<pre><code>userid: your generated userid
+
+returns: pebble-friendly json-encoded notification (source and text)
+
+$ curl "http://pbnotify.herokuapp.com/api/notification/get/2150a001dab1d068d13ee5f5"
+{"1": "source", "2": "Test", "3": "text", "4": "HelloWorld"}
+</code></pre>
+
+<h3 id="retrievenotification">retrieve notification</h3>
+
+<h4 id="notificationget">/notification/get/</h4>
+
+<h5 id="httpspbnotifyherokuappcomapinotificationgetltuseridgtltnotificationidgt">https://pbnotify.herokuapp.com/api/notification/get/&lt;userid&gt;/&lt;notificationid&gt;</h5>
+
+<pre><code>userid: your generated userid
+notificationid: the notificationid returned from a previous `/notification/create/` call
+
+returns: pebble-friendly json-encoded notification (source and text)
+
+$ curl "http://pbnotify.herokuapp.com/api/notification/get/2150a001dab1d068d13ee5f5/527ded52049fed00073e9c0f"
+{"1": "source", "2": "Test", "3": "text", "4": "HelloWorld"}
+</code></pre>
+
+<h3 id="markmostrecentnotificationasdelivered">mark most recent notification as delivered</h3>
+
+<h4 id="notificationdelivered">/notification/delivered/</h4>
+
+<h5 id="httpspbnotifyherokuappcomapinotificationdeliveredltuseridgt">https://pbnotify.herokuapp.com/api/notification/delivered/&lt;userid&gt;</h5>
+
+<pre><code>userid: your generated userid
+
+returns: json-encoded notificationid
+
+$ curl "http://pbnotify.herokuapp.com/api/notification/delivered/2150a001dab1d068d13ee5f5"
+{"1": "notificationid", "2": "527ded52049fed00073e9c0f"}
+</code></pre>
+{% endblock %}

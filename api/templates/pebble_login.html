@@ -2,6 +2,8 @@
 {% block title %}Welcome{% endblock %}
 {% block content %}
   <h1>PbNotify: The Pebble Notification API</h1>
+  <p>PbNotify is a Remote Pebble Notification API that provides a public-facing bridge between the Internet at large and local notifications on your Pebble.It is accompanied by a free watchface on the Pebble. This service allows any web app or server that can make a single API call to send notifications straight to your wrist. It was inspired by the need to be notified in a convenient manner when long-running commands on a remote server completed. Not only does PbNotify allow such notifications, but it also allows for a plethora of information to be sent along with the simple ping, such as the last command's exit status.</p>
+  <br />
   <p style="color:red;">{{ error }}</p>
 	<div>
 		<form action="{{ url_for('pebble_login') }}" method="POST">
