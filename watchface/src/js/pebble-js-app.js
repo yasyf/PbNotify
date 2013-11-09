@@ -38,7 +38,7 @@ function markNotificationRead() {
   req.onload = function(e) {
     if (req.readyState == 4) {
       if(req.status == 200) {
-        console.log(req.responseText);
+        //console.log(req.responseText);
       } 
     }
   }
@@ -53,7 +53,7 @@ function savePebbleID() {
   req.onload = function(e) {
     if (req.readyState == 4) {
       if(req.status == 200) {
-        console.log(req.responseText);
+        //console.log(req.responseText);
       } 
     }
   }
@@ -71,10 +71,10 @@ function getIDFromPebble() {
         if (response) {
           if(response[1] == "userid"){
           	id = response[2];
-          	console.log("Set Identifier: " + id);
+          	//console.log("Set Identifier: " + id);
           }
           else{
-          	console.log(dump(response));
+          	//console.log(dump(response));
           	requestConfig();
           }
        	}
@@ -97,28 +97,28 @@ function getNotification() {
   req.onload = function(e) {
     if (req.readyState == 4) {
       if(req.status == 200) {
-        console.log(req.responseText);
+        //console.log(req.responseText);
         response = JSON.parse(req.responseText);
         if (response) {
           if(response[1] != "error" && (source != response[2] || message != response[4])){
 	          source = response[2];
             message = response[4];
-	          console.log("Source: "+ source);
-	          console.log("Message: "+ message);
+	          //console.log("Source: "+ source);
+	          //console.log("Message: "+ message);
 	          needToSend = true;
           }
           else{
             if(source == response[2] && message == response[4]){
               markNotificationRead();
-              console.log("Marking Duplicate As Read");
+              //console.log("Marking Duplicate As Read");
             }
             else{
-              console.log("No New Messages");
+              //console.log("No New Messages");
             }
           }
        	}
       } else {
-        console.log("Error");
+        //console.log("Error");
       }
     }
   }
@@ -137,16 +137,13 @@ function sendNotification(){
     "source":source,
     "message":message},
     function(e) {
-	    console.log("Successfully delivered message with transactionId="
-	      + e.data.transactionId);
+	    //console.log("Successfully delivered message with transactionId=" + e.data.transactionId);
 	    markNotificationRead();
 	    Pebble.showSimpleNotificationOnPebble(source, message);
 	},
   	function(e) {
       needToSend = true;
-	    console.log("Unable to deliver message with transactionId="
-	      + e.data.transactionId
-	      + dump(e));
+	    //console.log("Unable to deliver message with transactionId=" + e.data.transactionId + dump(e));
   	});
 }
 
@@ -158,14 +155,14 @@ function processNotification(){
 
 function config(){
 	if(id != ""){
-    console.log("Set Identifier: " + id);
+    //console.log("Set Identifier: " + id);
 		return;
 	}
 	if(Pebble.getAccountToken() != ""){
-		console.log("Getting Identifier From Pebble Token");
+		//console.log("Getting Identifier From Pebble Token");
 		getIDFromPebble(); 
 	}else{
-    console.log("Requesting Config");
+    //console.log("Requesting Config");
 		requestConfig();
 	}
 }
@@ -187,20 +184,20 @@ Pebble.addEventListener("ready",
   function(e) {
 	  if(e.ready){
       init = true;
-	  	console.log("JavaScript app ready and running!");
-		  console.log("Pebble Account Token: " + Pebble.getAccountToken());
+	  	//console.log("JavaScript app ready and running!");
+		  //console.log("Pebble Account Token: " + Pebble.getAccountToken());
       setTimeout(config,1000);
       setInterval(processNotification,1000);
       setInterval(getNotification,10000); 
 	  }
 	  else{
-		  console.log("Ready Listener: "+ e.type);
+		  //console.log("Ready Listener: "+ e.type);
 	  }                          
   }
 );
 Pebble.addEventListener("appmessage",
   function(e) {
-    console.log("Received message: " + dump(e.payload));
+    //console.log("Received message: " + dump(e.payload));
     if(e.payload.command == "1"){
       getNotification();
     }
@@ -215,7 +212,7 @@ Pebble.addEventListener("showConfiguration",
 Pebble.addEventListener("webviewclosed",
   function(e) {
     id = e.response;
-    console.log("Set Identifier: " + id);
+    //console.log("Set Identifier: " + id);
     savePebbleID();
     source = "PbNotify";
     message = "No Messages";
