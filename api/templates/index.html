@@ -6,7 +6,7 @@
   <p>pebble account token
   	<input type="text" class="lineput params" id="accountToken" value="{{ token }}">
   </p>
-  <p><a id="clear">clear history</a></b></p>	
+  <p><a id="clear" href="#">clear history</a></b></p>	
   <script type="text/javascript">
   $("#accountToken").blur(function(){
   	$.post("/api/account/token/{{ session.userid }}/" + $("#accountToken").val());

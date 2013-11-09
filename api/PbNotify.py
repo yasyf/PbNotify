@@ -77,7 +77,7 @@ def login():
 def new_notification(userid, source, text):
 	if check_userid(userid):
 		if len(source) > 0 and len(text) > 0:
-			if len(source) > 10 or len(text) > 50:
+			if len(source) > 15 or len(text) > 30:
 				error = "invalid length"
 			else:
 				return Response(response=create_notification(userid, source, text), status=200, mimetype="application/json")

@@ -35,7 +35,26 @@ static void sync_tuple_changed_callback(const uint32_t key, const Tuple* new_tup
       }
 }
 
-static void send_cmd(void) {
+ void out_sent_handler(DictionaryIterator *sent, void *context) {
+   // outgoing message was delivered
+ }
+
+
+ void out_failed_handler(DictionaryIterator *failed, AppMessageResult reason, void *context) {
+   // outgoing message failed
+ }
+
+
+ void in_received_handler(DictionaryIterator *received, void *context) {
+   // incoming message received
+ }
+
+
+ void in_dropped_handler(AppMessageResult reason, void *context) {
+   // incoming message dropped
+ }
+
+static void start_js(void) {
   Tuplet value = TupletInteger(2, 1);
 
   DictionaryIterator *iter;
@@ -99,7 +118,7 @@ static void window_load(Window *window) {
                initial_values, ARRAY_LENGTH(initial_values),
                sync_tuple_changed_callback, sync_error_callback, NULL);
 
-  send_cmd();
+  start_js();
 }
 
  static void handle_minute_tick(struct tm *tick_time, TimeUnits units_changed) {
@@ -125,8 +144,11 @@ static void init(void) {
     .unload = window_unload,
   });
 
-  
-  app_message_open(inbound_size, outbound_size);
+   app_message_register_inbox_received(in_received_handler);
+   app_message_register_inbox_dropped(in_dropped_handler);
+   app_message_register_outbox_sent(out_sent_handler);
+   app_message_register_outbox_failed(out_failed_handler);
+   app_message_open(inbound_size, outbound_size);
 
   tick_timer_service_subscribe(MINUTE_UNIT, handle_minute_tick);
   
