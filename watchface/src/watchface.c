@@ -95,18 +95,19 @@ static void window_load(Window *window) {
   text_layer_set_text_alignment(time_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(time_layer));
 
-  source_layer = text_layer_create(GRect(0, 125, 144, 68));
+  source_layer = text_layer_create(GRect(0, 120, 144, 68));
   text_layer_set_text_color(source_layer, GColorWhite);
   text_layer_set_background_color(source_layer, GColorClear);
   text_layer_set_font(source_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28_BOLD));
   text_layer_set_text_alignment(source_layer, GTextAlignmentCenter);
   layer_add_child(window_layer, text_layer_get_layer(source_layer));
 
-  message_layer = text_layer_create(GRect(0, 60, 144, 68));
+  message_layer = text_layer_create(GRect(0, 65, 144, 68));
   text_layer_set_text_color(message_layer, GColorWhite);
   text_layer_set_background_color(message_layer, GColorClear);
   text_layer_set_font(message_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   text_layer_set_text_alignment(message_layer, GTextAlignmentCenter);
+  text_layer_set_overflow_mode(message_layer, GTextOverflowModeWordWrap);
   layer_add_child(window_layer, text_layer_get_layer(message_layer));
 
   Tuplet initial_values[] = {

@@ -102,13 +102,19 @@ function getNotification() {
         if (response) {
           if(response[1] != "error" && (source != response[2] || message != response[4])){
 	          source = response[2];
-	          message = response[4];
+            message = response[4];
 	          console.log("Source: "+ source);
 	          console.log("Message: "+ message);
 	          needToSend = true;
           }
           else{
-          	console.log("No New Messages");
+            if(source == response[2] && message == response[4]){
+              markNotificationRead();
+              console.log("Marking Duplicate As Read");
+            }
+            else{
+              console.log("No New Messages");
+            }
           }
        	}
       } else {
