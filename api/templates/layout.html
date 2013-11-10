@@ -15,7 +15,10 @@
 		<br /><br />
 	    <div id="footer" style="font-size:small;">
 	      {% block footer %}
-	      PbNotify by Yasyf Mohamedali. A HackMIT production. <a target="_blank" href="http://www.yasyf.com/contact/">Contact</a>.
+	      PbNotify by <a href="http://www.yasyf.com" target="_blank">Yasyf Mohamedali</a>. A HackMIT production.
+        {% if session.userid %}
+          <a target="_blank" href="http://www.yasyf.com/contact/">Contact Support</a>.
+        {% endif %}
 	      {% endblock %}
 	    </div>
 	</div>

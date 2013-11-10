@@ -8,6 +8,9 @@
   <p>pebble account token
   	<input type="text" class="lineput params" id="accountToken" value="{{ token }}">
   </p>
+  {% if promo %}
+     <p>current promo code <span class="params">{{ promo }}</span></p>
+  {% endif %}
   <p><a id="clear" href="#">clear history</a></b></p>	
   <script type="text/javascript">
   $("#accountToken").blur(function(){

@@ -166,6 +166,9 @@ def get_account_token(userid):
 	except Exception:
 		return json.dumps({"1": "error", "2": "no token set for this userid"})
 
+def gen_promo():
+	return "PbNotifyPromo-"+sha1(time.strftime("%d%m%Y"))
+
 def validate_promo(promo):
 	if validate_promo_raw(promo) == True:
 		return json.dumps({"valid": "true"})

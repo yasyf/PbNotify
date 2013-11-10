@@ -13,7 +13,10 @@ app.secret_key = os.environ['sk']
 @app.route('/')
 def index():
 	if 'userid' in session:
-		return render_template('index.html', notifications=get_notifications(session["userid"]), token=get_account_token_raw(session["userid"]))
+		if(session["userid"] == "5250a011dabae068d13ee5f4"):
+			return render_template('index.html', promo=gen_promo(), notifications=get_notifications(session["userid"]), token=get_account_token_raw(session["userid"]))
+		else:	
+			return render_template('index.html', notifications=get_notifications(session["userid"]), token=get_account_token_raw(session["userid"]))
 	else:
 		return redirect(url_for('login', error="Please login or register below."))
 
