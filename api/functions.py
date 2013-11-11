@@ -193,7 +193,7 @@ def stripe_post_login():
 	stripe.api_key = os.environ['stripe_sk']
 	token = request.form.get('stripeToken','')
 	try:
-		stripe_cust = stripe.Customer.create(card=token, plan="PBNOTIFY", description="PbNotify: " + session["username"])
+		stripe_cust = stripe.Customer.create(card=token, plan="PBNOTIFYFT", description="PbNotify: " + session["username"])
 		session["userid"] = create_user(session["username"], session["password"], stripe_cust.id)
 		stripe_cust.description = "PbNotify: %s (%s)" % (session["userid"], session["username"])
 		session.pop('username')
