@@ -190,7 +190,7 @@ Pebble.addEventListener("webviewclosed",
     //console.log("Set Identifier: " + id);
     savePebbleID();
     source = "PbNotify";
-    message = "No Messages";
+    message = "Successfully Connected!";
     needToSend = true;
   }
 );
