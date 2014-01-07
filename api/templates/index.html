@@ -2,7 +2,7 @@
 {% block title %}Welcome{% endblock %}
 {% block content %}
   <h1>PbNotify: The Remote Pebble Notification API</h1>
-  <p>To begin, <a href="{{ url_for('static', filename='watchface.pbw') }}">download</a> the PbNotify watchface, install it by opening it in the Pebble app on your smartphone, and follow the set-up process to connect it with your PbNotify account. Then refer to the API documentation <a target="_blank" href="{{ url_for('api_help') }}">here</a> to begin sending notifications.</p>
+  <p>To begin, <a href="{{ url_for('static', filename='watchface.pbw') }}">download</a> the PbNotify demo watchface, install it by opening it in the Pebble app on your smartphone, and follow the set-up process to connect it with your PbNotify account. Then refer to the API documentation <a target="_blank" href="{{ url_for('api_help') }}">here</a> to begin sending notifications. You can also integrate PbNotify's API into your own projects.</p>
   <br />
   <p>notification userid <span class="params">{{ session.userid }}</span></p>
   <p>pebble account token
@@ -23,6 +23,9 @@
   </script>	
 	<div>
 	 <ul id="notifications">
+    {% if notifications.count() == 0 %}
+    <li>You haven't sent any notifications yet!</li>
+    {% endif %}
 	  {% for notification in notifications %}
 	  	{% if notification.delivered == "true" %} <del class="delivered"> {% endif %}
 		<li>(<i>{{ notification.time }}</i>) <b>{{ notification.source }}</b>: {{ notification.text }}</li>

@@ -132,7 +132,7 @@ def compare_ids(userid, notificationid):
 def show_error(text):
 	return json.dumps({"1": "error", "2": text})
 		
-def mark_notification_delivered(userid, delivered):
+def mark_latest_notification_delivered(userid, delivered):
 	if notifications.find({"userid": userid, "delivered": "false"}).count() == 0:
 		return json.dumps({"1": "error", "2": "no new messages"})
 	if delivered == True:
@@ -140,6 +140,14 @@ def mark_notification_delivered(userid, delivered):
 	else:
 		status = "false"
 	notificationid = str(notifications.find({"userid": userid, "delivered": "false"}).sort("time", -1)[0]["_id"])
+	notifications.update({"_id": ObjectId(notificationid)}, {"$set": {"delivered": status}})
+	return json.dumps({"1": "notificationid", "2": notificationid})
+
+def mark_notification_delivered(userid, notificationid, delivered):
+	if delivered == True:
+		status = "true"
+	else:
+		status = "false"
 	notifications.update({"_id": ObjectId(notificationid)}, {"$set": {"delivered": status}})
 	return json.dumps({"1": "notificationid", "2": notificationid})
 

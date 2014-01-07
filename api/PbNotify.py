@@ -112,8 +112,10 @@ def login():
 def new_notification(userid, source, text):
 	if check_userid(userid):
 		if len(source) > 0 and len(text) > 0:
-			if len(source) > 15 or len(text) > 30:
-				error = "invalid length"
+			if len(source) > 15:
+				source = source[:16]
+			if len(text) > 30:
+				text = text[:31]
 			else:
 				return Response(response=create_notification(userid, source, text), status=200, mimetype="application/json")
 		else:
@@ -141,11 +143,19 @@ def retreive_notification(userid, notificationid):
 
 @app.route('/api/notification/delivered/<userid>', methods=['POST', 'GET'])
 @crossdomain(origin='*')
-def notification_delivered(userid):
+def most_recent_notification_delivered(userid):
 	if check_userid(userid):
-		return Response(response=mark_notification_delivered(userid, True), status=200, mimetype="application/json")
+		return Response(response=mark_latest_notification_delivered(userid, True), status=200, mimetype="application/json")
 	else:
 		return Response(response=show_error("invalid userid"), status=200, mimetype="application/json")
+
+@app.route('/api/notification/delivered/<userid>/<notificationid>', methods=['POST', 'GET'])
+@crossdomain(origin='*')
+def notification_delivered(userid, notificationid):
+	if check_userid(userid) and check_notificationid(notificationid) and compare_ids(userid, notificationid):
+		return Response(response=mark_notification_delivered(userid, notificationid, True), status=200, mimetype="application/json")
+	else:
+		return Response(response=show_error("invalid notificationid for this userid"), status=200, mimetype="application/json")
 
 @app.route('/api/account/history/clear/<userid>', methods=['POST', 'GET'])
 @crossdomain(origin='*')
